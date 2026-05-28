@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>美食口袋名單</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <div class="mx-auto max-w-3xl p-6">
+    <header class="mb-8 rounded-3xl bg-white/90 p-6 shadow-lg backdrop-blur-sm">
+      <h1 class="text-3xl font-semibold text-slate-900">美食口袋名單</h1>
+      <p class="mt-2 text-slate-600">搜尋餐廳地址並快速填入表單，保存你想收藏的美食。</p>
+    </header>
+
+    <div class="mb-8 rounded-3xl bg-white p-6 shadow-sm">
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <button id="tabAdd" class="rounded-3xl bg-sky-600 px-5 py-3 text-white transition hover:bg-sky-700 focus:outline-none">新增口袋名單</button>
+        <button id="tabBrowse" class="rounded-3xl bg-slate-100 px-5 py-3 text-slate-700 transition hover:bg-slate-200 focus:outline-none">瀏覽我的名單</button>
+      </div>
+    </div>
+
+    <section id="tabAddContent" class="space-y-6">
+      <section class="rounded-3xl bg-white p-6 shadow-sm">
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="searchQuery">搜尋餐廳名稱</label>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <input id="searchQuery" type="text" placeholder="輸入餐廳名稱，例如：鼎泰豐" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+          <button id="searchBtn" class="shrink-0 rounded-2xl bg-sky-600 px-5 py-3 text-white transition hover:bg-sky-700">搜尋地址</button>
+        </div>
+        <p id="searchStatus" class="mt-3 text-sm text-slate-500"></p>
+      </section>
+
+      <section class="rounded-3xl bg-white p-6 shadow-sm">
+        <h2 class="mb-4 text-2xl font-semibold text-slate-900">餐廳口袋名單表單</h2>
+        <form id="restaurantForm" class="space-y-5">
+          <div class="grid gap-5 md:grid-cols-2">
+            <div>
+              <label class="mb-2 block text-sm font-medium text-slate-700" for="restaurantName">餐廳名稱</label>
+              <input id="restaurantName" type="text" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200" required />
+            </div>
+
+            <div>
+              <label class="mb-2 block text-sm font-medium text-slate-700" for="cuisineType">料理類型</label>
+              <select id="cuisineType" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200">
+                <option value="火鍋">火鍋</option>
+                <option value="燒肉">燒肉</option>
+                <option value="甜點">甜點</option>
+                <option value="小吃">小吃</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid gap-5 md:grid-cols-3">
+            <div>
+              <label class="mb-2 block text-sm font-medium text-slate-700" for="displayName">地址</label>
+              <input id="displayName" type="text" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200" readonly />
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium text-slate-700" for="latitude">緯度</label>
+              <input id="latitude" type="text" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200" readonly />
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium text-slate-700" for="longitude">經度</label>
+              <input id="longitude" type="text" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200" readonly />
+            </div>
+          </div>
+
+          <div class="grid gap-5 md:grid-cols-3">
+            <div class="md:col-span-2">
+              <label class="mb-2 block text-sm font-medium text-slate-700" for="favoriteDish">必點菜色</label>
+              <input id="favoriteDish" type="text" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="例：小籠包、招牌烤肉" />
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium text-slate-700" for="rating">美味星等</label>
+              <select id="rating" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200">
+                <option value="1">1 星</option>
+                <option value="2">2 星</option>
+                <option value="3" selected>3 星</option>
+                <option value="4">4 星</option>
+                <option value="5">5 星</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="addButton" type="button" class="w-full rounded-2xl bg-emerald-600 px-6 py-3 text-white transition hover:bg-emerald-700 md:w-auto">新增至口袋名單</button>
+        </form>
+      </section>
+    </section>
+
+    <section id="tabBrowseContent" class="hidden space-y-6">
+      <div class="rounded-3xl bg-white p-6 shadow-sm">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-semibold text-slate-900">我的口袋名單</h2>
+            <p class="mt-1 text-sm text-slate-500">從 GAS Web App 讀取已儲存的餐廳資料。</p>
+          </div>
+          <button id="refreshList" class="rounded-2xl bg-slate-100 px-4 py-2 text-slate-700 transition hover:bg-slate-200">重新載入</button>
+        </div>
+      </div>
+
+      <div id="browseLoading" class="hidden items-center justify-center rounded-3xl bg-white p-10 shadow-sm">
+        <svg class="mr-3 h-8 w-8 animate-spin text-sky-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
+        <span class="text-slate-600">載入中，請稍候...</span>
+      </div>
+
+      <div id="browseMessage" class="hidden rounded-3xl bg-white p-6 text-center text-slate-500 shadow-sm"></div>
+
+      <div id="cardGrid" class="grid gap-6 sm:grid-cols-2"></div>
+    </section>
+  </div>
+
+  <script>
+    const webAppUrl = 'https://YOUR_GAS_WEB_APP_URL_HERE';
+    const tabAdd = document.getElementById('tabAdd');
+    const tabBrowse = document.getElementById('tabBrowse');
+    const tabAddContent = document.getElementById('tabAddContent');
+    const tabBrowseContent = document.getElementById('tabBrowseContent');
+    const refreshListBtn = document.getElementById('refreshList');
+    const browseLoading = document.getElementById('browseLoading');
+    const browseMessage = document.getElementById('browseMessage');
+    const cardGrid = document.getElementById('cardGrid');
+    const searchQueryInput = document.getElementById('searchQuery');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchStatus = document.getElementById('searchStatus');
+    const displayNameInput = document.getElementById('displayName');
+    const latitudeInput = document.getElementById('latitude');
+    const longitudeInput = document.getElementById('longitude');
+    const restaurantNameInput = document.getElementById('restaurantName');
+    const restaurantForm = document.getElementById('restaurantForm');
+    const addButton = document.getElementById('addButton');
+
+    function switchTab(tab) {
+      if (tab === 'add') {
+        tabAdd.classList.replace('bg-slate-100', 'bg-sky-600');
+        tabAdd.classList.replace('text-slate-700', 'text-white');
+        tabBrowse.classList.replace('bg-sky-600', 'bg-slate-100');
+        tabBrowse.classList.replace('text-white', 'text-slate-700');
+        tabAddContent.classList.remove('hidden');
+        tabBrowseContent.classList.add('hidden');
+      } else {
+        tabBrowse.classList.replace('bg-slate-100', 'bg-sky-600');
+        tabBrowse.classList.replace('text-slate-700', 'text-white');
+        tabAdd.classList.replace('bg-sky-600', 'bg-slate-100');
+        tabAdd.classList.replace('text-white', 'text-slate-700');
+        tabAddContent.classList.add('hidden');
+        tabBrowseContent.classList.remove('hidden');
+        loadPocketList();
+      }
+    }
+
+    function getCategoryBadge(category) {
+      const styles = {
+        火鍋: 'bg-red-100 text-red-700',
+        燒肉: 'bg-orange-100 text-orange-700',
+        甜點: 'bg-pink-100 text-pink-700',
+        小吃: 'bg-amber-100 text-amber-700',
+        其他: 'bg-slate-100 text-slate-700'
+      };
+      return styles[category] || 'bg-slate-100 text-slate-700';
+    }
+
+    function renderStars(starCount) {
+      const count = Math.min(Math.max(parseInt(starCount, 10) || 0, 0), 5);
+      return '★'.repeat(count) + '☆'.repeat(5 - count);
+    }
+
+    function showLoading(show) {
+      browseLoading.classList.toggle('hidden', !show);
+    }
+
+    async function loadPocketList() {
+      browseMessage.textContent = '';
+      browseMessage.classList.add('hidden');
+      cardGrid.classList.add('hidden');
+      cardGrid.innerHTML = '';
+      showLoading(true);
+
+      try {
+        const response = await fetch(`${webAppUrl}?t=${Date.now()}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+          browseMessage.textContent = result.message || '讀取名單失敗。';
+          browseMessage.className = 'rounded-3xl bg-white p-6 text-center text-rose-600 shadow-sm';
+          return;
+        }
+
+        const items = result.data;
+        if (!items.length) {
+          browseMessage.textContent = '目前尚無口袋名單，請先新增餐廳。';
+          browseMessage.className = 'rounded-3xl bg-white p-6 text-center text-slate-500 shadow-sm';
+          cardGrid.classList.add('hidden');
+          return;
+        }
+
+        cardGrid.classList.remove('hidden');
+        cardGrid.innerHTML = items.map(item => {
+          const badgeClass = getCategoryBadge(item.category || item.cuisineType || '其他');
+          return `
+            <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+              <div class="p-6">
+                <div class="mb-3 flex items-center justify-between gap-3">
+                  <h3 class="text-xl font-semibold text-slate-900">${item.restaurantName || '無名稱'}</h3>
+                  <span class="rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${item.category || item.cuisineType || '其他'}</span>
+                </div>
+                <p class="mb-3 text-sm text-slate-500">${item.address || '無地址資料'}</p>
+                <div class="mb-4 flex flex-wrap items-center gap-2 text-sm">
+                  <span class="rounded-2xl bg-sky-50 px-3 py-1 text-sky-700">${renderStars(item.rating)}</span>
+                  <span class="rounded-2xl bg-slate-100 px-3 py-1 text-slate-700">必點：${item.featuredDish || '尚未填寫'}</span>
+                </div>
+                <div class="flex flex-col gap-3 sm:flex-row">
+                  <a href="${item.mapsUrl || item.mapUrl || '#'}" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-white transition hover:bg-emerald-700">點我導航</a>
+                  <span class="inline-flex items-center rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-600">緯度 ${item.lat || item.latitude || 'N/A'}，經度 ${item.lng || item.longitude || 'N/A'}</span>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error(error);
+        browseMessage.textContent = '讀取失敗，請稍後再試。';
+        browseMessage.className = 'rounded-3xl bg-white p-6 text-center text-rose-600 shadow-sm';
+        cardGrid.classList.add('hidden');
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    async function searchLocation() {
+      const query = searchQueryInput.value.trim();
+      if (!query) {
+        searchStatus.textContent = '請先輸入餐廳名稱。';
+        searchStatus.className = 'mt-3 text-sm text-rose-500';
+        return;
+      }
+
+      searchStatus.textContent = '搜尋中，請稍後…';
+      searchStatus.className = 'mt-3 text-sm text-slate-500';
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        const data = await response.json();
+
+        if (!data.length) {
+          searchStatus.textContent = '找不到符合的地點，請嘗試其他關鍵字。';
+          searchStatus.className = 'mt-3 text-sm text-rose-500';
+          displayNameInput.value = '';
+          latitudeInput.value = '';
+          longitudeInput.value = '';
+          return;
+        }
+
+        const item = data[0];
+        displayNameInput.value = item.display_name || '';
+        latitudeInput.value = item.lat || '';
+        longitudeInput.value = item.lon || '';
+        restaurantNameInput.value = query;
+        searchStatus.textContent = '已成功取得地址資訊。';
+        searchStatus.className = 'mt-3 text-sm text-emerald-600';
+      } catch (error) {
+        console.error(error);
+        searchStatus.textContent = '取得位置時發生錯誤，請稍後再試。';
+        searchStatus.className = 'mt-3 text-sm text-rose-500';
+      }
+    }
+
+    async function addToPocketList() {
+      const payload = {
+        restaurantName: restaurantNameInput.value.trim(),
+        cuisineType: document.getElementById('cuisineType').value,
+        rating: document.getElementById('rating').value,
+        featuredDish: document.getElementById('favoriteDish').value.trim(),
+        address: displayNameInput.value,
+        lat: latitudeInput.value,
+        lng: longitudeInput.value,
+      };
+
+      console.log('準備送出的資料：', payload);
+
+      try {
+        const response = await fetch(webAppUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`伺服器回應錯誤：${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('新增成功：', result);
+        alert('已新增至口袋名單！');
+        restaurantForm.reset();
+        displayNameInput.value = '';
+        latitudeInput.value = '';
+        longitudeInput.value = '';
+      } catch (error) {
+        console.error('POST 失敗：', error);
+        alert('新增失敗，請稍後再試。');
+      }
+    }
+
+    tabAdd.addEventListener('click', () => switchTab('add'));
+    tabBrowse.addEventListener('click', () => switchTab('browse'));
+    refreshListBtn.addEventListener('click', loadPocketList);
+    searchBtn.addEventListener('click', searchLocation);
+    addButton.addEventListener('click', addToPocketList);
+    searchQueryInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        searchLocation();
+      }
+    });
+
+    // 預設顯示新增分頁
+    switchTab('add');
+  </script>
+</body>
+</html>
